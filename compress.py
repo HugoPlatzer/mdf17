@@ -3,6 +3,9 @@ import os, sys, uuid, argparse
 def encodeGM(inFile, outFile, quality):
   os.system("gm convert {} -quality {} {}".format(inFile, quality, outFile))
 
+def decodeGM(inFile, outFile):
+  os.system("gm convert {} {}".format(inFile, outFile))
+
 def encodeJxrLib(inFile, outFile, quality):
   os.system("JxrEncApp -i {} -o {} -q {}".format(inFile, outFile, quality))
 
