@@ -40,10 +40,15 @@ def compressToSize(encoder, inFile, fileEnding, qualityRange, targetSize):
     
   outFile, outFileSize = compressAtQuality(currentIdx)
   if outFileSize <= targetSize:
-    return outFile
+    return (outFile, qualityRange[currentIdx], outFileSize)
+  elif currentIdx > 0:
+    currentIdx -= 1
+  else:
+    currentIdx = 0
+    
   os.remove(outFile)
   outFile, outFileSize = compressAtQuality(currentIdx)
-  return outFile
+  return (outFile, qualityRange[currentIdx], outFileSize)
 
 def switchExtension(fileName, newExtension):
   baseName, extension = os.path.splitext(fileName)
@@ -55,11 +60,14 @@ def convertImagesInDirectory(inDir, outDir, compressor):
     originalFile = os.path.join(inDir, dirList[i])
     uncompressedOriginal = str(uuid.uuid4()) + ".bmp"
     decodeGM(originalFile, uncompressedOriginal)
-    compressedFile = compressor.compress(uncompressedOriginal)
+    compressedFile, quality, fileSize = compressor.compress(uncompressedOriginal)
     compressedFileName = switchExtension(os.path.split(originalFile)[1], compressor.extension)
     os.rename(compressedFile, os.path.join(outDir, compressedFileName))
     os.remove(uncompressedOriginal)
-    print("{}/{}".format(i + 1, len(dirList)))
+    print("{}/{} q = {} size = {}".format(i + 1, len(dirList), quality, fileSize))
+    if fileSize > compressor.targetSize:
+      print("could not meet target size!")
+      sys.exit(1)
 
 class JPGFormat:
   def __init__(self, targetSize):
