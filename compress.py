@@ -64,7 +64,7 @@ def convertImagesInDirectory(inDir, outDir, compressor):
     compressedFileName = switchExtension(os.path.split(originalFile)[1], compressor.extension)
     os.rename(compressedFile, os.path.join(outDir, compressedFileName))
     os.remove(uncompressedOriginal)
-    print("{}/{} q = {} size = {}".format(i + 1, len(dirList), quality, fileSize))
+    print("{}/{} {} q = {} size = {}".format(i + 1, len(dirList), dirList[i], quality, fileSize))
     if fileSize > compressor.targetSize:
       print("could not meet target size!")
       sys.exit(1)
