@@ -1,4 +1,5 @@
 import os, argparse
+from collections import defaultdict
 
 def convertGM(inFile, outFile):
   os.system("gm convert {} {}".format(inFile, outFile))
@@ -22,7 +23,8 @@ def convertImagesInDirectory(inDir, outDir, compressToPNG, decoders):
       os.rename(uncompressedImage, os.path.join(outDir, uncompressedImage))
     print("{}/{}".format(i + 1, len(dirList)))
 
-decoders = {".jpg" : convertGM, ".jp2" : convertGM, ".jxr" : decodeJxrLib}
+decoders = defaultdict(lambda : convertGM)
+decoders[".jxr"] = decodeJxrLib
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-p', action='store_true')
